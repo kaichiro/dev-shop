@@ -1,0 +1,22 @@
+{
+  "name": "dev-shop",
+  "version": "1.0.0",
+  "description": "Projeto eCommerce DevShop - DevPleno",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "eCommerce",
+    "DevShop",
+    "DevPleno"
+  ],
+  "author": "Kaichiro Fukuda",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.0.0",
+    "ejs": "^2.6.1",
+    "express": "^4.17.0"
+  }
+}

@@ -1,0 +1,9 @@
+# modules
+/node_modules
+
+# enviroment
+.env
+
+# my ignore files
+config-db.json
+infos.txt
