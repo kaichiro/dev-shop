@@ -2,12 +2,15 @@ const express = require('express')
 const app = express()
 const path = require('path')
 
-require('dotenv')
+require('dotenv/config')
+
+app.set('view engine', 'ejs')
+app.use(express.static('public'))
 
 const port = process.env.PORT || 3000
 
 app.get('/', (req, res) => {
-    res.send('DevShop')
+    res.render('home')
 })
 
 app.listen(port, err => {

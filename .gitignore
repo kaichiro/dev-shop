@@ -7,3 +7,4 @@
 # my ignore files
 config-db.json
 infos.txt
+/database-model
