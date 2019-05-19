@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 const path = require('path')
+// const slug = require('./utils/slug')
+const categoriesWithSlug_ = require('./utils/categories-wth-slug')
 const {
     host,
     port_db,
@@ -24,19 +26,22 @@ const db = require('knex')({
     }
 })
 
+const isTracerSQL = false
 db.on('query', query => {
-    const {
-        method,
-        options,
-        __knexQueryUid,
-        sql,
-    } = query
-    console.log('\n/// BEGIN \\\\\\')
-    console.log('method:', method)
-    console.log('options:', options)
-    console.log('__knexQueryUid:', __knexQueryUid)
-    console.log('sql:', sql)
-    console.log('\\\\\\ END ///\n')
+    if (isTracerSQL) {
+        const {
+            method,
+            options,
+            __knexQueryUid,
+            sql,
+        } = query
+        console.log('\n/// BEGIN \\\\\\')
+        console.log('method:', method)
+        console.log('options:', options)
+        console.log('__knexQueryUid:', __knexQueryUid)
+        console.log('sql:', sql)
+        console.log('\\\\\\ END ///\n')
+    }
 })
 
 app.set('view engine', 'ejs')
@@ -44,13 +49,17 @@ app.use(express.static('public'))
 
 app.get('/', async (req, res) => {
     const categories = await db('categories').select('*')
-    console.log(categories)
+    // const categoriesWithSlug = categories.map(category => {
+    //     const newCategory = { ...category, slug: slug(category.category) }
+    //     return newCategory
+    // })
+    const categoriesWithSlug = categoriesWithSlug_(categories)
     res.render('home', {
-        categories,
+        categories: categoriesWithSlug,
     })
 })
 
-app.get('/category/:id', async (req, res) => {
+app.get('/category/:id/:slug', async (req, res) => {
     // const products = await db('products as p').select('p.*').where('p.id', function () {
     //     this
     //         .select('cp.product_id')
@@ -58,12 +67,21 @@ app.get('/category/:id', async (req, res) => {
     //         .whereRaw('cp.product_id = p.id')
     //         .where('cp.category_id', req.params.id)
     // })
+    const categories = await db('categories').select('*')
+    // const categoriesWithSlug = categories.map(category => {
+    //     const newCategory = { ...category, slug: slug(category.category) }
+    //     return newCategory
+    // })
+    const categoriesWithSlug = categoriesWithSlug_(categories)
+
     const products = await db('products as p')
         .innerJoin('categories_products as cp', 'p.id', 'cp.product_id')
         .where('cp.category_id', req.params.id)
-        // .select('p.*')
         .distinct('p.*')
-    res.send(products)
+    res.render('category', {
+        categories: categoriesWithSlug,
+        products,
+    })
 })
 
 app.listen(port, err => {
