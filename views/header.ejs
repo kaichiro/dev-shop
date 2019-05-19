@@ -54,7 +54,7 @@ $(document).ready(function() {
 <div class="row align-items-center">
 	<div class="col-lg-3">
 	<div class="brand-wrap">
-		<img class="logo" src="/images/logo.png" alt="logo DevShop">
+		<a href="/"><img class="logo" src="/images/logo.png" alt="logo DevShop"></a>
 		<!--h2 class="logo-text">DevShop</h2-->
 	</div> <!-- brand-wrap.// -->
 	</div>
@@ -128,7 +128,7 @@ $(document).ready(function() {
 
         <% categories.forEach( category =>{ %>
             <li class="nav-item">
-                <a class="nav-link" href="/category/<%- category.id %>"><%- category.category %></a>
+                <a class="nav-link" href="/category/<%- category.id %>/<%- category.slug %>"><%- category.category %></a>
             </li>
         <% } ) %>
 
