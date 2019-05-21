@@ -15,6 +15,18 @@ const getProductsByCategoryId = db => async (idCategory) => {
     return products
 }
 
+const getProductById = db => async (idProduct) => {
+    const product = await db('products as p')
+        .select('p.*')
+        .where('p.id', idProduct)
+    const productWithSlug = { ...product, slug: slug(product.name) }
+    console.log(product)
+    console.log(productWithSlug)
+    // return productWithSlug[0]
+    return product[0]
+}
+
 module.exports = {
     getProductsByCategoryId,
+    getProductById,
 }
