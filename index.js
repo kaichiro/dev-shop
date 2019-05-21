@@ -6,7 +6,8 @@ const {
     getCategories,
 } = require('./models/Category')
 const {
-    getProductsByCategoryId
+    getProductsByCategoryId,
+    getProductById,
 } = require('./models/Product')
 const {
     host,
@@ -40,35 +41,53 @@ db.on('query', query => {
             __knexQueryUid,
             sql,
         } = query
-        console.log(`\n${new Date()}`)
-        console.log('/// BEGIN \\\\\\')
-        console.log('method:', method)
-        console.log('options:', options)
-        console.log('__knexQueryUid:', __knexQueryUid)
+        // console.log(`\n${new Date()}`)
+        // console.log('/// BEGIN \\\\\\')
+        // console.log('method:', method)
+        // console.log('options:', options)
+        // console.log('__knexQueryUid:', __knexQueryUid)
         console.log('sql:', sql)
-        console.log('\\\\\\ END ///\n')
+        // console.log('\\\\\\ END ///\n')
     }
 })
 
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
 
-app.get('/', async (req, res) => {
+/** middleware */
+app.use(async (req, res, next) => {
     const categories = await getCategories(db)()
-    res.render('home', {
-        categories,
-    })
+    res.locals = {
+        categories
+    }
+    next()
+})
+
+app.get('/', async (req, res) => {
+    // const categories = await getCategories(db)()
+    /* o middleware já vai passar esta informação */
+    res.render('home')
+
 })
 
 app.get('/category/:id/:slug', async (req, res) => {
     const idCategory = req.params.id
     const category = await getCategoryById(db)(idCategory)
-    const categories = await getCategories(db)()
+    // const categories = await getCategories(db)()
     const products = await getProductsByCategoryId(db)(idCategory)
     res.render('category', {
         category,
-        categories,
+        // categories,
         products,
+    })
+})
+
+app.get('/product/:id/:slug', async (req, res) => {
+    const product = await getProductById(db)(req.params.id)
+    // const categories = await getCategories(db)()
+    res.render('product-detail', {
+        product,
+        // categories,
     })
 })
 
