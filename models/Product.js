@@ -19,9 +19,7 @@ const getProductById = db => async (idProduct) => {
     const product = await db('products as p')
         .select('p.*')
         .where('p.id', idProduct)
-    const productWithSlug = { ...product, slug: slug(product.name) }
-    console.log(product)
-    console.log(productWithSlug)
+    // const productWithSlug = { ...product, slug: slug(product.name) }
     // return productWithSlug[0]
     return product[0]
 }
