@@ -2,14 +2,6 @@ const express = require('express')
 const app = express()
 const path = require('path')
 const {
-    getCategoryById,
-    getCategories,
-} = require('./models/Category')
-const {
-    getProductsByCategoryId,
-    getProductById,
-} = require('./models/Product')
-const {
     host,
     port_db,
     user,
@@ -19,6 +11,12 @@ const {
 } = require('./config-db.json')
 
 require('dotenv/config')
+
+const categoryModel = require('./models/category')
+
+const categoriesController = require('./controllers/categories')
+const productsController = require('./controllers/products')
+const homeController = require('./controllers/home')
 
 const port = process.env.PORT || 3000
 
@@ -34,20 +32,8 @@ const db = require('knex')({
 })
 
 db.on('query', query => {
-    if ('true' === process.env.DEBUG_SQL_CMD) {
-        const {
-            method,
-            options,
-            __knexQueryUid,
-            sql,
-        } = query
-        // console.log(`\n${new Date()}`)
-        // console.log('/// BEGIN \\\\\\')
-        // console.log('method:', method)
-        // console.log('options:', options)
-        // console.log('__knexQueryUid:', __knexQueryUid)
-        console.log('sql:', sql)
-        // console.log('\\\\\\ END ///\n')
+    if ('true' === process.env.SHOW_DEBUG_SQL_CMD) {
+        console.log('sql:', query.sql)
     }
 })
 
@@ -56,40 +42,16 @@ app.use(express.static('public'))
 
 /** middleware */
 app.use(async (req, res, next) => {
-    const categories = await getCategories(db)()
+    const categories = await categoryModel.getCategories(db)()
     res.locals = {
-        categories
+        categories,
     }
     next()
 })
 
-app.get('/', async (req, res) => {
-    // const categories = await getCategories(db)()
-    /* o middleware já vai passar esta informação */
-    res.render('home')
-
-})
-
-app.get('/category/:id/:slug', async (req, res) => {
-    const idCategory = req.params.id
-    const category = await getCategoryById(db)(idCategory)
-    // const categories = await getCategories(db)()
-    const products = await getProductsByCategoryId(db)(idCategory)
-    res.render('category', {
-        category,
-        // categories,
-        products,
-    })
-})
-
-app.get('/product/:id/:slug', async (req, res) => {
-    const product = await getProductById(db)(req.params.id)
-    // const categories = await getCategories(db)()
-    res.render('product-detail', {
-        product,
-        // categories,
-    })
-})
+app.get('/', homeController.getIndex)
+app.get('/category/:id/:slug', categoriesController.getCategories(db))
+app.get('/product/:id/:slug', productsController.getProduct(db))
 
 app.listen(port, err => {
     const linkApp = 'http://localhost'
