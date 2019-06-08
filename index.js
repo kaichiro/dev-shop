@@ -1,6 +1,8 @@
 const path = require('path')
 require('dotenv/config')
+const usersModel = require('./models/user')
 
+const port = process.env.PORT || 3000
 const {
     host,
     port_db,
@@ -29,7 +31,7 @@ db.on('query', query => {
 
 const app = require('./app')(db)
 
-const port = process.env.PORT || 3000
+usersModel.initUser(db)()
 
 app.listen(port, err => {
     const linkApp = 'http://localhost'
