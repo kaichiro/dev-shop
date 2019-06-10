@@ -1,5 +1,6 @@
+const bcrypt = require('bcryptjs')
+
 const generatePassHash = passwd => {
-    const bcrypt = require('bcryptjs')
     const salt = bcrypt.genSaltSync(10)
     const hash = bcrypt.hashSync(passwd, salt)
     return hash
@@ -11,7 +12,7 @@ const initUser = db => async () => {
         const user = {
             name: 'admin',
             email: 'admin@admin.com',
-            passwd: generatePassHash('MinhaSenhaDificil!'),
+            passwd: generatePassHash('admin'),
             email_checked: true,
             created: new Date(),
             updated: new Date(),
@@ -24,6 +25,20 @@ const initUser = db => async () => {
     }
 }
 
+const login = db => async (email, passwd) => {
+    const user = await db('users').select('*').where('email', email)
+    if (0 === user.length) {
+        throw new Error('Invalid user! (email not found)')
+    }
+
+    if (!bcrypt.compareSync(passwd, user[0].passwd)) {
+        throw new Error('Invalid user! (passwd not found)')
+    }
+
+    return user[0]
+}
+
 module.exports = {
     initUser,
+    login,
 }
