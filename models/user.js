@@ -1,7 +1,7 @@
-const generatePassHash = password => {
+const generatePassHash = passwd => {
     const bcrypt = require('bcryptjs')
     const salt = bcrypt.genSaltSync(10)
-    const hash = bcrypt.hashSync(password, salt)
+    const hash = bcrypt.hashSync(passwd, salt)
     return hash
 }
 
@@ -11,7 +11,7 @@ const initUser = db => async () => {
         const user = {
             name: 'admin',
             email: 'admin@admin.com',
-            password: generatePassHash('MinhaSenhaDificil!'),
+            passwd: generatePassHash('MinhaSenhaDificil!'),
             email_checked: true,
             created: new Date(),
             updated: new Date(),
