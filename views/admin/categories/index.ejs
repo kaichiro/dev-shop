@@ -1,0 +1,52 @@
+<% include ../header.ejs %>
+
+<!-- ========================= SECTION PAGETOP ========================= -->
+<section class="section-pagetop bg-primary">
+<div class="container clearfix">
+	<h2 class="title-page">Admin</h2>
+
+	<nav class="float-left">
+	<ol class="breadcrumb text-white">
+	    <li class="breadcrumb-item"><a href="/">Home</a></li>
+	</ol>  
+	</nav>
+</div> <!-- container //  -->
+</section>
+<!-- ========================= SECTION INTRO END// ========================= -->
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-content bg padding-y">
+<div class="container">
+
+<div class="row">
+	<main class="col-sm-12">
+
+<% categories.forEach( category => { %>
+
+<article class="card card-product">
+	<div class="card-body">
+        <div class="row">
+            <article class="col-sm-9">
+                <h4 class="title"><%= category.category %></h4>
+            </article> <!-- col.// -->
+            <aside class="col-sm-3 border-left">
+                <p>
+                    <a href="/admin/categories/edit/11" class="btn btn-primary">Edit</a>
+                    <a href="/admin/categories/delete/11" class="btn btn-secondary">Delete</a>
+                </p>
+            </aside>
+        </div> <!-- row.// -->
+	</div> <!-- card-body .// -->
+</article> <!-- card product .// -->
+<% }) %>
+
+
+
+	</main> <!-- col.// -->
+</div>
+
+</div> <!-- container .//  -->
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+
+<%- include ../../footer.ejs %>
