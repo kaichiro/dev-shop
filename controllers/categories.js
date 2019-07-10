@@ -11,6 +11,15 @@ const getCategories = db => async (req, res) => {
     })
 }
 
+const adminGetCategories = db => async (req, res) => {
+    const categories = await categoryModel.getCategories(db)()
+    res.render('admin/categories/index', {
+        categories,
+    })
+
+}
+
 module.exports = {
     getCategories,
+    adminGetCategories,
 }

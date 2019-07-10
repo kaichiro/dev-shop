@@ -8,7 +8,7 @@ const getCategoryById = db => async (id) => {
 }
 
 const getCategories = db => async () => {
-    const categories = await db('categories').select('*')
+    const categories = await db('categories as c').select('c.*').orderBy('c.category')
     const categoriesWithSlug = categories.map(category => {
         const newCategory = { ...category, slug: slug(category.category) }
         return newCategory
