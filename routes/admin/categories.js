@@ -4,6 +4,9 @@ const init = db => {
 
     router.get('/', categories.adminGetCategories(db))
 
+    router.get('/Create', categories.adminCreateCategory(db))
+    router.post('/Create', categories.adminCreateCategory(db))
+
     return router
 }
 
